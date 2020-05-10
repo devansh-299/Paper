@@ -1,0 +1,3 @@
+rootProject.name='Paper'
+include ':app'
+include ':core'
