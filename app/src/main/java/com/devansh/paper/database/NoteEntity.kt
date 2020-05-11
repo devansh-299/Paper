@@ -11,7 +11,7 @@ data class NoteEntity(
     val content: String,
     @ColumnInfo(name = "creation_date")
     val creationTime: Long,
-    @ColumnInfo(name = "creation_date")
+    @ColumnInfo(name = "updated_time")
     val updatedTime: Long,
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0L

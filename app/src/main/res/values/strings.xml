@@ -4,4 +4,7 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="add_new">Add New</string>
+    <string name="enter_all_details">Please enter all the details</string>
+    <string name="note_saved">Note Saved</string>
+    <string name="error">Error Occurred</string>
 </resources>
