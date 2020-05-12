@@ -26,8 +26,12 @@ class NoteViewModel(application: Application): AndroidViewModel(application) {
         GetNote(repository)
     )
 
+    // for telling status saving/updating note
     val noteSaved = MutableLiveData<Boolean>()
     val notesList = MutableLiveData<List<Note>>()
+    // for fetching note from database using noteId
+    val currentNote = MutableLiveData<Note?>()
+    val deletedNote = MutableLiveData<Boolean>()
 
     fun saveNote(note: Note) {
         coroutineScope.launch {
@@ -39,6 +43,19 @@ class NoteViewModel(application: Application): AndroidViewModel(application) {
     fun fetchAllNotes() {
         coroutineScope.launch {
             notesList.postValue(useCases.getAllNotes())
+        }
+    }
+
+    fun fetchNoteDetails(noteId: Long) {
+        coroutineScope.launch {
+            currentNote.postValue(useCases.getNote(noteId))
+        }
+    }
+
+    fun deleteNote(note: Note) {
+        coroutineScope.launch {
+            useCases.deleteNote(note)
+            deletedNote.postValue(true)
         }
     }
 }

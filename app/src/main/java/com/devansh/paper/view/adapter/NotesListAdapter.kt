@@ -14,6 +14,8 @@ import kotlin.collections.ArrayList
 class NotesListAdapter(var notes: ArrayList<Note>):
     RecyclerView.Adapter<NotesListAdapter.NoteViewHolder>() {
 
+    var onItemClick: ((Note) -> Unit)? = null
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = NoteViewHolder(
         LayoutInflater.from(parent.context).inflate(R.layout.item_note, parent, false)
     )
@@ -30,6 +32,12 @@ class NotesListAdapter(var notes: ArrayList<Note>):
         private val noteTitle = view.item_title
         private val noteContent = view.item_content
         private val updateTime = view.item_last_update
+
+        init {
+            view.setOnClickListener {
+                onItemClick?.invoke(notes[position])
+            }
+        }
 
         fun bindData(note: Note) {
             noteTitle.text = note.title

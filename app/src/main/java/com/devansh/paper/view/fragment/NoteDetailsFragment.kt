@@ -1,11 +1,13 @@
 package com.devansh.paper.view.fragment
 
+import android.app.AlertDialog
 import android.content.Context.INPUT_METHOD_SERVICE
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
+import android.widget.TextView
 import android.widget.Toast
 import androidx.core.os.bundleOf
 import androidx.lifecycle.Observer
@@ -15,15 +17,12 @@ import com.devansh.paper.R
 import com.devansh.paper.viewmodel.NoteViewModel
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import kotlinx.android.synthetic.main.fragment_note_details.*
-import kotlin.properties.Delegates
 
 
 class NoteDetailsFragment : BottomSheetDialogFragment() {
 
     private lateinit var viewModel: NoteViewModel
     private var currentNote = Note(0L, "", "", 0L, 0L)
-
-    var noteId by Delegates.notNull<Long>()
 
     companion object {
         private const val NOTE_ID = "note_id"
@@ -43,9 +42,18 @@ class NoteDetailsFragment : BottomSheetDialogFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        arguments?.let { noteId = it.getLong(NOTE_ID) }
 
         viewModel = ViewModelProviders.of(this).get(NoteViewModel::class.java)
+
+        arguments?.let {
+            val noteId = it.getLong(NOTE_ID)
+            // if the note exists
+            if (noteId != 0L) {
+                viewModel.fetchNoteDetails(noteId)
+            }
+        }
+
+        bottomsheet_delete_note.setOnClickListener { deleteNote() }
 
         chip_save.setOnClickListener {
             if (bottomsheet_title.text.toString() != "" ||
@@ -79,6 +87,34 @@ class NoteDetailsFragment : BottomSheetDialogFragment() {
                 Toast.makeText(context, getString(R.string.error), Toast.LENGTH_SHORT ).show()
             }
         })
+
+        viewModel.currentNote.observe(this, Observer { note ->
+            note?.let {
+                currentNote = it
+                bottomsheet_title.setText(it.title, TextView.BufferType.EDITABLE)
+                bottomsheet_content.setText(it.content, TextView.BufferType.EDITABLE)
+            }
+        })
+
+        viewModel.deletedNote.observe(this, Observer {
+            if (it) {
+                Toast.makeText(context, getString(R.string.deleted), Toast.LENGTH_SHORT ).show()
+            }
+        })
+    }
+
+    private fun deleteNote() = if (currentNote.id != 0L) {
+        AlertDialog.Builder(context)
+            .setTitle(getString(R.string.delete_note_title))
+            .setMessage(getString(R.string.delete_note_message))
+            .setPositiveButton(getString(R.string.yes)) {
+                    dialog, i -> viewModel.deleteNote(currentNote)
+            }
+            .setNegativeButton(getString(R.string.no)) { dialog, i -> dialog.dismiss() }
+            .create()
+            .show()
+    } else {
+        Toast.makeText(context, getString(R.string.cannot_delete), Toast.LENGTH_SHORT ).show()
     }
 
     private fun hideKeyboard() {

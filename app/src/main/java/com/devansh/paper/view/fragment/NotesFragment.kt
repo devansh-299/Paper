@@ -9,6 +9,7 @@ import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
+
 import com.devansh.paper.R
 import com.devansh.paper.view.adapter.NotesListAdapter
 import com.devansh.paper.viewmodel.NoteViewModel
@@ -30,10 +31,15 @@ class NotesFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel = ViewModelProviders.of(this).get(NoteViewModel::class.java)
+
+        // for handling item clicks
+        noteListAdapter.onItemClick = { goToNoteDetails(it.id) }
+
         rv_notes.apply {
             layoutManager = LinearLayoutManager(context)
             adapter = noteListAdapter
         }
+
         fab.setOnClickListener { goToNoteDetails() }
         observeViewModel()
     }

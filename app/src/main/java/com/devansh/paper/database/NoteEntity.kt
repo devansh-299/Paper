@@ -19,7 +19,7 @@ data class NoteEntity(
     companion object {
         // creates a database entity from the note give
         fun createNoteEntity(note: Note) = NoteEntity(note.title, note.content,
-            note.creationTime, note.updateTime)
+            note.creationTime, note.updateTime, note.id)
     }
 
     // create NoteObject from the Note Entity
