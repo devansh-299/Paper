@@ -81,6 +81,7 @@ class NoteDetailsFragment : BottomSheetDialogFragment() {
                 }
                 // for saving the note
                 viewModel.saveNote(currentNote)
+                dismiss()
             } else {
                 Toast.makeText(context,getString(R.string.enter_all_details), Toast.LENGTH_SHORT )
                     .show()

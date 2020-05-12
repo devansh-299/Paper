@@ -9,6 +9,7 @@ import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 
 import com.devansh.paper.R
 import com.devansh.paper.view.adapter.NotesListAdapter
@@ -16,7 +17,7 @@ import com.devansh.paper.viewmodel.NoteViewModel
 import kotlinx.android.synthetic.main.fragment_notes.*
 
 
-class NotesFragment : Fragment() {
+class NotesFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
 
     private lateinit var viewModel: NoteViewModel
     private val noteListAdapter = NotesListAdapter(arrayListOf())
@@ -40,6 +41,7 @@ class NotesFragment : Fragment() {
             adapter = noteListAdapter
         }
 
+        swipeRefresh.setOnRefreshListener(this)
         fab.setOnClickListener { goToNoteDetails() }
         observeViewModel()
     }
@@ -51,12 +53,13 @@ class NotesFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        viewModel.fetchAllNotes()
+        onRefresh()
     }
 
     private fun observeViewModel() {
         viewModel.notesList.observe(this, Observer { noteList ->
             progressbar.visibility = View.GONE
+            swipeRefresh.isRefreshing = false
             // if values are fetched
             noteList?.let {
                 if (noteList.isNotEmpty()) {
@@ -67,5 +70,9 @@ class NotesFragment : Fragment() {
                 }
             }
         })
+    }
+
+    override fun onRefresh() {
+        viewModel.fetchAllNotes()
     }
 }

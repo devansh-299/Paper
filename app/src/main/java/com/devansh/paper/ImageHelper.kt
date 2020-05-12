@@ -36,6 +36,5 @@ class ImageHelper {
             compressedBitmap.compress(Bitmap.CompressFormat.PNG, 100, byteBuffer)
             return byteBuffer.toByteArray()
         }
-
     }
 }
