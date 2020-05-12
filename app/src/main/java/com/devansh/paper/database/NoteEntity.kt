@@ -13,15 +13,17 @@ data class NoteEntity(
     val creationTime: Long,
     @ColumnInfo(name = "updated_time")
     val updatedTime: Long,
+    @ColumnInfo(typeAffinity = ColumnInfo.BLOB)
+    var image: ByteArray? = null,
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0L
 ) {
     companion object {
         // creates a database entity from the note give
         fun createNoteEntity(note: Note) = NoteEntity(note.title, note.content,
-            note.creationTime, note.updateTime, note.id)
+            note.creationTime, note.updateTime, note.image, note.id)
     }
 
     // create NoteObject from the Note Entity
-    fun createNoteObject() = Note(id, title, content, creationTime, updatedTime)
+    fun createNoteObject() = Note(id, title, content, creationTime, updatedTime, image)
 }

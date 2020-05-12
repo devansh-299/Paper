@@ -8,4 +8,7 @@
     <dimen name="value_16sp">16sp</dimen>
     <dimen name="value_20sp">20sp</dimen>
     <dimen name="value_10sp">10sp</dimen>
+    <dimen name="value_50dp">50dp</dimen>
+    <dimen name="value_24sp">24sp</dimen>
+    <dimen name="value_80dp">80dp</dimen>
 </resources>

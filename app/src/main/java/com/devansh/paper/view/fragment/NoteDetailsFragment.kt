@@ -2,6 +2,7 @@ package com.devansh.paper.view.fragment
 
 import android.app.AlertDialog
 import android.content.Context.INPUT_METHOD_SERVICE
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -9,10 +10,17 @@ import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.TextView
 import android.widget.Toast
+import android.Manifest
+import android.app.Activity
+import android.content.Intent
+import android.content.pm.PackageManager
+import android.net.Uri
+import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.devansh.core.data.Note
+import com.devansh.paper.ImageHelper
 import com.devansh.paper.R
 import com.devansh.paper.viewmodel.NoteViewModel
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
@@ -21,6 +29,8 @@ import kotlinx.android.synthetic.main.fragment_note_details.*
 
 class NoteDetailsFragment : BottomSheetDialogFragment() {
 
+    private val PERMISSION_CODE = 299
+    private val REQUEST_CODE = 29
     private lateinit var viewModel: NoteViewModel
     private var currentNote = Note(0L, "", "", 0L, 0L)
 
@@ -49,11 +59,14 @@ class NoteDetailsFragment : BottomSheetDialogFragment() {
             val noteId = it.getLong(NOTE_ID)
             // if the note exists
             if (noteId != 0L) {
+                bottomsheet_header.text = "Update Note"
                 viewModel.fetchNoteDetails(noteId)
             }
         }
 
         bottomsheet_delete_note.setOnClickListener { deleteNote() }
+
+        iv_note.setOnClickListener { checkPermission() }
 
         chip_save.setOnClickListener {
             if (bottomsheet_title.text.toString() != "" ||
@@ -93,6 +106,7 @@ class NoteDetailsFragment : BottomSheetDialogFragment() {
                 currentNote = it
                 bottomsheet_title.setText(it.title, TextView.BufferType.EDITABLE)
                 bottomsheet_content.setText(it.content, TextView.BufferType.EDITABLE)
+                it.image?.let { it1 -> ImageHelper.showImage(context!!, it1, iv_note) }
             }
         })
 
@@ -115,6 +129,57 @@ class NoteDetailsFragment : BottomSheetDialogFragment() {
             .show()
     } else {
         Toast.makeText(context, getString(R.string.cannot_delete), Toast.LENGTH_SHORT ).show()
+    }
+
+    private fun checkPermission() {
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (ContextCompat.checkSelfPermission(context!!,
+                    Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED) {
+                //permission denied
+                val permissions = arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE);
+                //show popup to request runtime permission
+                requestPermissions(permissions, PERMISSION_CODE);
+            } else {
+                //permission already granted
+                pickImageFromStorage();
+            }
+        } else {
+            //system OS is < Marshmallow
+            pickImageFromStorage();
+        }
+    }
+
+    private fun pickImageFromStorage() {
+        val intent = Intent(Intent.ACTION_PICK)
+        intent.type = "image/*"
+        startActivityForResult(intent, REQUEST_CODE)
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>,
+                                            grantResults: IntArray) {
+        when(requestCode){
+            PERMISSION_CODE -> {
+                if (grantResults.isNotEmpty() && grantResults[0] ==
+                    PackageManager.PERMISSION_GRANTED){
+                    //permission from popup granted
+                    pickImageFromStorage()
+                }
+                else{
+                    //permission from popup denied
+                }
+            }
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (resultCode == Activity.RESULT_OK && requestCode == REQUEST_CODE){
+            val uri: Uri? = data?.data
+            val imageByteArray = ImageHelper.covertUriToByteArray(context!!, uri!!)
+            ImageHelper.showImage(context!!, imageByteArray, iv_note)
+            currentNote.image = imageByteArray
+        }
     }
 
     private fun hideKeyboard() {

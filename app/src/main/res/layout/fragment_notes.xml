@@ -12,6 +12,13 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 
+    <include
+        android:id="@+id/layout_empty"
+        android:visibility="gone"
+        android:layout_width="fill_parent"
+        android:layout_height="match_parent"
+        layout="@layout/no_notes_layout" />
+
     <ProgressBar
         android:id="@+id/progressbar"
         android:layout_width="wrap_content"

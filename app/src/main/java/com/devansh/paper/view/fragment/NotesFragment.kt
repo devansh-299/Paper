@@ -57,13 +57,13 @@ class NotesFragment : Fragment() {
     private fun observeViewModel() {
         viewModel.notesList.observe(this, Observer { noteList ->
             progressbar.visibility = View.GONE
-            rv_notes.visibility = View.VISIBLE
             // if values are fetched
             noteList?.let {
                 if (noteList.isNotEmpty()) {
+                    rv_notes.visibility = View.VISIBLE
                     noteListAdapter.updateNotes(noteList.sortedByDescending { it.updateTime })
                 } else {
-                    Toast.makeText(context, "No Notes Found", Toast.LENGTH_SHORT).show()
+                    layout_empty.visibility = View.VISIBLE
                 }
             }
         })

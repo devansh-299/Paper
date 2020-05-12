@@ -2,10 +2,7 @@ package com.devansh.paper.di
 
 
 import com.devansh.core.repository.NoteRepository
-import com.devansh.core.usecase.AddNote
-import com.devansh.core.usecase.DeleteNote
-import com.devansh.core.usecase.GetAllNotes
-import com.devansh.core.usecase.GetNote
+import com.devansh.core.usecase.*
 import com.devansh.paper.UseCases
 import dagger.Module
 import dagger.Provides
@@ -18,6 +15,7 @@ class UseCasesModule {
         AddNote(noteRepository),
         DeleteNote(noteRepository),
         GetAllNotes(noteRepository),
-        GetNote(noteRepository)
+        GetNote(noteRepository),
+        GetNoteImage()
     )
 }

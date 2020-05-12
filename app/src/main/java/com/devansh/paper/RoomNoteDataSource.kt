@@ -12,7 +12,7 @@ import com.devansh.paper.database.NoteEntity
  */
 class RoomNoteDataSource(context: Context): NoteDataSource {
 
-    val noteDao = DatabaseService.getInstance(context).noteDao()
+    private val noteDao = DatabaseService.getInstance(context).noteDao()
 
     override suspend fun addNote(note: Note) = noteDao.addNoteEntity(
         NoteEntity.createNoteEntity(note))
@@ -23,4 +23,5 @@ class RoomNoteDataSource(context: Context): NoteDataSource {
 
     override suspend fun deleteNote(note: Note) = noteDao.deleteNoteEntity(
         NoteEntity.createNoteEntity(note))
+
 }

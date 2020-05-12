@@ -1,10 +1,12 @@
 package com.devansh.paper.view.adapter
 
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.devansh.core.data.Note
+import com.devansh.paper.ImageHelper
 import com.devansh.paper.R
 import kotlinx.android.synthetic.main.item_note.view.*
 import java.text.SimpleDateFormat
@@ -15,10 +17,13 @@ class NotesListAdapter(var notes: ArrayList<Note>):
     RecyclerView.Adapter<NotesListAdapter.NoteViewHolder>() {
 
     var onItemClick: ((Note) -> Unit)? = null
+    lateinit var context: Context
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = NoteViewHolder(
-        LayoutInflater.from(parent.context).inflate(R.layout.item_note, parent, false)
-    )
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NoteViewHolder {
+        context = parent.context
+        return NoteViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_note,
+            parent, false))
+    }
 
     override fun getItemCount() = notes.size
 
@@ -28,10 +33,10 @@ class NotesListAdapter(var notes: ArrayList<Note>):
 
     inner class NoteViewHolder(view: View): RecyclerView.ViewHolder(view) {
 
-        private val layout = view.noteCardView
         private val noteTitle = view.item_title
         private val noteContent = view.item_content
         private val updateTime = view.item_last_update
+        private val imageView = view.item_imageview
 
         init {
             view.setOnClickListener {
@@ -43,6 +48,7 @@ class NotesListAdapter(var notes: ArrayList<Note>):
             noteTitle.text = note.title
             noteContent.text = note.content
             updateTime.text = "Last Updated: ${formatTime(note.updateTime)}"
+            note.image?.let { ImageHelper.showImage(context, it, imageView, false ) }
         }
 
         private fun formatTime(timeInMillis: Long): String {
