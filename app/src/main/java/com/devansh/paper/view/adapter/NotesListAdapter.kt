@@ -49,6 +49,7 @@ class NotesListAdapter(var notes: ArrayList<Note>):
             noteContent.text = note.content
             updateTime.text = "Last Updated: ${formatTime(note.updateTime)}"
             note.image?.let { ImageHelper.showImage(context, it, imageView, false ) }
+                ?: imageView.setImageResource(R.drawable.rv_image_placeholder)
         }
 
         private fun formatTime(timeInMillis: Long): String {
