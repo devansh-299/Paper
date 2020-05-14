@@ -14,4 +14,5 @@
     <string name="yes">Yes</string>
     <string name="no">No</string>
     <string name="no_notes_found">No Notes Found!</string>
+    <string name="permissiond_denied">Permission Denied</string>
 </resources>

@@ -168,6 +168,8 @@ class NoteDetailsFragment : BottomSheetDialogFragment() {
                 }
                 else{
                     //permission from popup denied
+                    Toast.makeText(context, getString(R.string.permissiond_denied),
+                        Toast.LENGTH_SHORT).show()
                 }
             }
         }
