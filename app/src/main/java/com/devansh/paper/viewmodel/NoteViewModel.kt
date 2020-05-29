@@ -35,8 +35,8 @@ class NoteViewModel(application: Application): AndroidViewModel(application) {
 
     fun saveNote(note: Note) {
         coroutineScope.launch {
-            useCases.addNote(note)
-            noteSaved.postValue(true)
+            val success = useCases.addNote(note)
+            noteSaved.postValue(success)
         }
     }
 
@@ -54,8 +54,8 @@ class NoteViewModel(application: Application): AndroidViewModel(application) {
 
     fun deleteNote(note: Note) {
         coroutineScope.launch {
-            useCases.deleteNote(note)
-            deletedNote.postValue(true)
+            val success = useCases.deleteNote(note)
+            deletedNote.postValue(success)
         }
     }
 }

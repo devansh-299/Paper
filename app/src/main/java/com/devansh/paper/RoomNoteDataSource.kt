@@ -14,14 +14,18 @@ class RoomNoteDataSource(context: Context): NoteDataSource {
 
     private val noteDao = DatabaseService.getInstance(context).noteDao()
 
-    override suspend fun addNote(note: Note) = noteDao.addNoteEntity(
-        NoteEntity.createNoteEntity(note))
+    override suspend fun addNote(note: Note): Boolean {
+        noteDao.addNoteEntity(NoteEntity.createNoteEntity(note))
+        return true
+    }
 
     override suspend fun getNote(id: Long) = noteDao.getNoteEntity(id)?.createNoteObject()
 
     override suspend fun getAllNotes() = noteDao.getAllNoteEntities().map { it.createNoteObject() }
 
-    override suspend fun deleteNote(note: Note) = noteDao.deleteNoteEntity(
-        NoteEntity.createNoteEntity(note))
+    override suspend fun deleteNote(note: Note): Boolean {
+        noteDao.deleteNoteEntity(NoteEntity.createNoteEntity(note))
+        return true
+    }
 
 }

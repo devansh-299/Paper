@@ -6,6 +6,5 @@ data class UseCases(
     val addNote: AddNote,
     val deleteNote: DeleteNote,
     val getAllNotes: GetAllNotes,
-    val getNote: GetNote,
-    val getNoteImage: GetNoteImage
+    val getNote: GetNote
 )

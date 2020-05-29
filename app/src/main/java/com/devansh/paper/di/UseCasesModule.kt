@@ -15,7 +15,6 @@ class UseCasesModule {
         AddNote(noteRepository),
         DeleteNote(noteRepository),
         GetAllNotes(noteRepository),
-        GetNote(noteRepository),
-        GetNoteImage()
+        GetNote(noteRepository)
     )
 }
