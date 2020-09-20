@@ -1,30 +1,20 @@
 package com.devansh.paper.viewmodel
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
+import androidx.hilt.Assisted
+import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.ViewModel
 import com.devansh.core.data.Note
 import com.devansh.paper.UseCases
-import com.devansh.paper.di.ApplicationModule
-import com.devansh.paper.di.DaggerViewModelComponent
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
-class NoteViewModel(application: Application): AndroidViewModel(application) {
+
+class NoteViewModel @ViewModelInject constructor (private val useCases: UseCases, @Assisted private val savedStateHandle: SavedStateHandle): ViewModel() {
 
     private val coroutineScope = CoroutineScope(Dispatchers.IO)
-
-    @Inject
-    lateinit var useCases: UseCases
-
-    init {
-        DaggerViewModelComponent.builder()
-            .applicationModule(ApplicationModule(getApplication()))
-            .build()
-            .inject(this)
-    }
 
     // for telling status saving/updating note
     val noteSaved = MutableLiveData<Boolean>()
