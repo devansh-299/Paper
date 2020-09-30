@@ -4,15 +4,16 @@ import com.devansh.core.data.Note
 import com.devansh.core.repository.NoteRepository
 import com.devansh.core.usecase.GetNote
 import com.devansh.paper.common.mockNote
+import com.google.common.truth.Truth.assertThat
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runBlockingTest
-import org.hamcrest.CoreMatchers.`is`
-import org.junit.Assert.assertThat
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.Mockito
 import org.mockito.junit.MockitoJUnitRunner
 
+@ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
 class GetNoteUseCaseUnitTest {
 
@@ -31,7 +32,7 @@ class GetNoteUseCaseUnitTest {
         // invoking the condition
         val result = getNoteUseCase.invoke(note.id)
         // checking the condition
-        assertThat(result, `is`(note))
+        assertThat(result).isEqualTo(note)
     }
 
     @Test
@@ -45,7 +46,7 @@ class GetNoteUseCaseUnitTest {
         // passing random noteId to give null as response - invoking condition
         val result = getNoteUseCase.invoke(1111L)
         // checking the condition
-        assertThat(result, `is`(nullNote))
+        assertThat(result).isEqualTo(nullNote)
     }
 
 }

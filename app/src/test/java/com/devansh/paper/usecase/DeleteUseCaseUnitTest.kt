@@ -3,6 +3,8 @@ package com.devansh.paper.usecase
 import com.devansh.core.repository.NoteRepository
 import com.devansh.core.usecase.DeleteNote
 import com.devansh.paper.common.mockNote
+import com.google.common.truth.Truth.assertThat
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runBlockingTest
 import org.junit.Assert.assertTrue
 import org.junit.Test
@@ -11,6 +13,7 @@ import org.mockito.Mock
 import org.mockito.Mockito
 import org.mockito.junit.MockitoJUnitRunner
 
+@ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
 class DeleteUseCaseUnitTest {
 
@@ -30,7 +33,7 @@ class DeleteUseCaseUnitTest {
         // invoking the conditions
         val result = deleteUseCase.invoke(note)
         // checking the conditions
-        assertTrue(result)
+        assertThat(result).isTrue()
 
     }
 }
