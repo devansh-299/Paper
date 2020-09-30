@@ -24,9 +24,10 @@ import com.devansh.paper.ImageHelper
 import com.devansh.paper.R
 import com.devansh.paper.viewmodel.NoteViewModel
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_note_details.*
 
-
+@AndroidEntryPoint
 class NoteDetailsFragment : BottomSheetDialogFragment() {
 
     private val PERMISSION_CODE = 299
@@ -53,7 +54,7 @@ class NoteDetailsFragment : BottomSheetDialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel = ViewModelProviders.of(this).get(NoteViewModel::class.java)
+        viewModel = ViewModelProviders.of(this,defaultViewModelProviderFactory ).get(NoteViewModel::class.java)
 
         arguments?.let {
             val noteId = it.getLong(NOTE_ID)
@@ -92,7 +93,7 @@ class NoteDetailsFragment : BottomSheetDialogFragment() {
     }
 
     private fun observeViewModel() {
-        viewModel.noteSaved.observe(this, Observer {
+        viewModel.noteSaved.observe(viewLifecycleOwner, {
             // if noteSaved == true
             if (it) {
                 hideKeyboard()
@@ -102,7 +103,7 @@ class NoteDetailsFragment : BottomSheetDialogFragment() {
             }
         })
 
-        viewModel.currentNote.observe(this, Observer { note ->
+        viewModel.currentNote.observe(viewLifecycleOwner, { note ->
             note?.let {
                 currentNote = it
                 bottomsheet_title.setText(it.title, TextView.BufferType.EDITABLE)
@@ -111,7 +112,7 @@ class NoteDetailsFragment : BottomSheetDialogFragment() {
             }
         })
 
-        viewModel.deletedNote.observe(this, Observer {
+        viewModel.deletedNote.observe(viewLifecycleOwner, {
             if (it) {
                 Toast.makeText(context, getString(R.string.deleted), Toast.LENGTH_SHORT ).show()
             }
@@ -138,16 +139,16 @@ class NoteDetailsFragment : BottomSheetDialogFragment() {
             if (ContextCompat.checkSelfPermission(context!!,
                     Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED) {
                 //permission denied
-                val permissions = arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE);
+                val permissions = arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE)
                 //show popup to request runtime permission
-                requestPermissions(permissions, PERMISSION_CODE);
+                requestPermissions(permissions, PERMISSION_CODE)
             } else {
                 //permission already granted
-                pickImageFromStorage();
+                pickImageFromStorage()
             }
         } else {
             //system OS is < Marshmallow
-            pickImageFromStorage();
+            pickImageFromStorage()
         }
     }
 

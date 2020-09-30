@@ -3,14 +3,16 @@ package com.devansh.paper.usecase
 import com.devansh.core.repository.NoteRepository
 import com.devansh.core.usecase.AddNote
 import com.devansh.paper.common.mockNote
+import com.google.common.truth.Truth.assertThat
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runBlockingTest
-import org.junit.Assert.assertTrue
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.Mockito
 import org.mockito.junit.MockitoJUnitRunner
 
+@ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
 class AddUseCaseUnitTest {
 
@@ -30,6 +32,6 @@ class AddUseCaseUnitTest {
         // invoking the conditions
         val result = addUseCase.invoke(note)
         // checking the conditions
-        assertTrue(result)
+        assertThat(result).isTrue()
     }
 }
